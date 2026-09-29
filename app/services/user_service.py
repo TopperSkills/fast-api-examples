@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from app.schemas.user_schema import User,UserUpdate
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.user_model import UserModel,AddressModel
+from app.core.security import hash_password
 
 # user = {
 #     name:"",
@@ -30,7 +31,8 @@ class UserService:
             gender=user.gender,
             email=user.email,
             mobile=user.mobile,
-            password=user.password,
+            # Store only the bcrypt hash, never the plain-text password.
+            password=hash_password(user.password),
             city=user.city,
             address=address
         )
@@ -90,6 +92,9 @@ class UserService:
         
         update_data = data.model_dump(exclude_unset=True)#client side data
         address_data = update_data.pop("address",None)
+        # If the password is being changed, hash the new one before saving.
+        if update_data.get("password"):
+            update_data["password"] = hash_password(update_data["password"])
 
 
 
