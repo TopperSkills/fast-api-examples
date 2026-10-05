@@ -1313,26 +1313,34 @@ amount
 FROM orders
 WHERE status ILIKE 'Pending';
 
-
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install fastapi uvicorn sqlalchemy greenlet "psycopg[binary]" 
-
+pip install fastapi uvicorn sqlalchemy greenlet "psycopg[binary]"
 
 python -m pip show sqlalchemy
 
-
-
-
 ORM - Object Relational Mapping
 
-
 user = {
-  id:1,
-  name:"aa",
-  address:{
-    city:"pune",
-    pincode:121212
-  }
+id:1,
+name:"aa",
+address:{
+city:"pune",
+pincode:121212
+}
 }# fast-api-examples
+
+client -> post formdata(username & password) -> server (auth/login)-> check in DB -> if available then generate JWT token -> send response to the client
+
+Bcrypt -> to encrypt the password.
+
+Ex
+
+abcd123 -> encryption/hashing -> store in DB
+
+Tokens
+Access TOken - Bearer
+access token - expires in 30 minutes
+
+    Refresh TOken - expires in 24 hours

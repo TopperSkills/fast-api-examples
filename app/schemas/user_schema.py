@@ -22,7 +22,7 @@ class User(BaseModel):
     mobile:str = Field(pattern=r"^(\+\d{1,3})?[6-9]\d{9}$")
     city:str | None = Field(default=None)
     password:str
-    address:Address
+    address:Address | None = None
 
 
     @field_validator("name")
@@ -48,7 +48,7 @@ class UserResponse(BaseModel):
     mobile:str
     email:str
     city:str | None = None
-    address:Address
+    address:Address | None = None
 
 
 class AddressUpdate(BaseModel):

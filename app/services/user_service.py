@@ -16,13 +16,15 @@ from app.core.security import hash_password
 class UserService:
     @staticmethod
     async def create_user(user:User,db:AsyncSession):
-        # create Address ORM object 
-        address=AddressModel(
-            street=user.address.street,
-            city=user.address.city,
-            country=user.address.country,
-            pincode=user.address.pincode,
-        )
+        # create Address ORM object (address is optional)
+        address = None
+        if user.address is not None:
+            address=AddressModel(
+                street=user.address.street,
+                city=user.address.city,
+                country=user.address.country,
+                pincode=user.address.pincode,
+            )
 
         # create User ORM object 
 
@@ -103,8 +105,12 @@ class UserService:
 
 
         if address_data:
-            for field, value in address_data.items():
-                setattr(user_model.address,field,value)
+            if user_model.address is None:
+                # user signed up without an address: create one now
+                user_model.address = AddressModel(**address_data)
+            else:
+                for field, value in address_data.items():
+                    setattr(user_model.address,field,value)
         
         try:
             await db.commit()
